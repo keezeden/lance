@@ -1,13 +1,7 @@
-// { type: "punc", value: "(" }           // punctuation: parens, comma, semicolon etc.
-// { type: "num", value: 5 }              // numbers
-// { type: "str", value: "Hello World!" } // strings
-// { type: "kw", value: "lambda" }        // keywords
-// { type: "var", value: "a" }            // identifiers
-// { type: "op", value: "!=" }            // operators
-
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -18,9 +12,9 @@ var operators = []string{"=", "==", "!=", "+", "-", "/", "*"}
 
 type Lexer struct {
 	index int
-	pointer int
+	buffer []byte
 	stream Stream
-	buffer []Token
+	tokens []Token
 }
 
 type Token struct {
@@ -29,17 +23,34 @@ type Token struct {
 }
 
 // TODO: optimize with FSM for scanning possible next token first
-func evaluate(chars []byte) (Token, bool) {
+func evaluate(chars []byte, tokens []Token) (Token, bool) {
 	segment := string(chars)
+	// new lines
+	new_line_match, _ := regexp.MatchString("(\r\n|\r|\n)", segment)
+	if (new_line_match) {
+		return Token{ value: segment, category: "separator"}, true
+	}
+	// keywords
 	if (contains(segment, keywords)) {
 		return Token{ value: segment, category: "keyword"}, true
 	}
+	// separators
 	if (contains(segment, separators)) {
 		return Token{ value: segment, category: "separator"}, true
 	}
-	match, _ := regexp.MatchString("\"(.*?)\"", segment)
-	if (match) {
+	// operators
+	if (contains(segment, operators)) {
+		return Token{ value: segment, category: "operator"}, true
+	}
+	// strings
+	strings_match, _ := regexp.MatchString("\"(.*?)\"", segment)
+	if (strings_match) {
 		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "string"}, true
+	}
+	// variables
+	variable, _ := regexp.MatchString("[a-zA-Z]+", segment)
+	if (variable && tokens[:-1]) {
+		return Token{ value: segment, category: "variable"}, true
 	}
 
 
@@ -48,32 +59,29 @@ func evaluate(chars []byte) (Token, bool) {
 
 
 func lpeek(l *Lexer) Token {
-	var chars []byte
-
 	for !seof(&l.stream) {
 		char := speek(&l.stream)
-		chars = append(chars, char)
+		l.buffer = append(l.buffer, char)
+		fmt.Println(string(l.buffer))
 
-		_, found := evaluate(chars)
+		_, found := evaluate(l.buffer, l.tokens)
 		if (found) {
-			l.pointer++
 			spop(&l.stream)
 			break
 		}
 
 
-		l.pointer++
 		spop(&l.stream)
 	}
 
-	token, _ := evaluate(chars)
+	token, _ := evaluate(l.buffer)
+	lpop(l)
 	return token
 }
 
 
-
 func lpop(l *Lexer) {
-	l.index = l.pointer
+	l.buffer = []byte{}
 }
 
 func leof(l *Lexer) bool {
@@ -81,15 +89,14 @@ func leof(l *Lexer) bool {
 }
 
 
-
 func lexer(file string) Lexer {
 	streamer := stream(file)
-	var buffer []Token
+	var tokens []Token
 
 	return Lexer{
 		index: 0,
-		pointer: 0,
+		buffer: []byte{},
 		stream: streamer,
-		buffer: buffer,
+		tokens: tokens,
 	}
 }
