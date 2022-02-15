@@ -46,7 +46,6 @@ func evaluate(segment string) (Token, bool) {
 		return Token{ value: segment, category: "variable"}, true
 	}
 
-
 	return Token{}, false
 }
 
@@ -83,7 +82,8 @@ func lexer(file string) Lexer {
 		spop(&streamer)
 	}
 
-	buffer = strings.FieldsFunc(string(lines), split)
+	re := regexp.MustCompile(`[^\s(){}"']+|([^\s"']*"([^"]*)"[^\s"']*)+|'([^']*)`)
+	buffer = re.FindAllString(string(lines), -1)
 	fmt.Println(strings.Join(buffer, ", "))
 
 	return Lexer{

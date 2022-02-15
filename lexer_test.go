@@ -101,8 +101,6 @@ var hello_human_tokens = []Token {
 	},
 }
 
-// out("Hello " + name)
-
 func TestLexerHelloHuman(t *testing.T) {
 	assert := assert.New(t)
 	file := "./snippets/hello_human.ll"
