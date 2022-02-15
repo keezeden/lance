@@ -6,14 +6,13 @@ import (
 	"strings"
 )
 
-var separators = []string{"(", ")", "{", "}"}
+var separators = []string{"(", ")", "{", "}", " "}
 var keywords = []string{"const", "if", "else", "out", "in"}
 var operators = []string{"=", "==", "!=", "+", "-", "/", "*"}
 
 type Lexer struct {
 	index int
-	buffer []byte
-	stream Stream
+	buffer []string
 	tokens []Token
 }
 
@@ -23,13 +22,7 @@ type Token struct {
 }
 
 // TODO: optimize with FSM for scanning possible next token first
-func evaluate(chars []byte, tokens []Token) (Token, bool) {
-	segment := string(chars)
-	// new lines
-	new_line_match, _ := regexp.MatchString("(\r\n|\r|\n)", segment)
-	if (new_line_match) {
-		return Token{ value: segment, category: "separator"}, true
-	}
+func evaluate(segment string) (Token, bool) {
 	// keywords
 	if (contains(segment, keywords)) {
 		return Token{ value: segment, category: "keyword"}, true
@@ -49,7 +42,7 @@ func evaluate(chars []byte, tokens []Token) (Token, bool) {
 	}
 	// variables
 	variable, _ := regexp.MatchString("[a-zA-Z]+", segment)
-	if (variable && tokens[:-1]) {
+	if (variable) {
 		return Token{ value: segment, category: "variable"}, true
 	}
 
@@ -57,46 +50,45 @@ func evaluate(chars []byte, tokens []Token) (Token, bool) {
 	return Token{}, false
 }
 
+func split(r rune) bool {
+    return contains(string(r), separators)
+}
 
 func lpeek(l *Lexer) Token {
-	for !seof(&l.stream) {
-		char := speek(&l.stream)
-		l.buffer = append(l.buffer, char)
-		fmt.Println(string(l.buffer))
+	 token, _ := evaluate(l.buffer[l.index])
 
-		_, found := evaluate(l.buffer, l.tokens)
-		if (found) {
-			spop(&l.stream)
-			break
-		}
-
-
-		spop(&l.stream)
-	}
-
-	token, _ := evaluate(l.buffer)
-	lpop(l)
-	return token
+	 return token
 }
 
 
 func lpop(l *Lexer) {
-	l.buffer = []byte{}
+	l.index++
 }
 
 func leof(l *Lexer) bool {
-	return seof(&l.stream)
+	return l.index == len(l.buffer) 
 }
 
 
 func lexer(file string) Lexer {
 	streamer := stream(file)
 	var tokens []Token
+	var lines []byte
+	var buffer []string
+
+	for !seof(&streamer) {
+		char := speek(&streamer)
+		lines = append(lines, char)
+
+		spop(&streamer)
+	}
+
+	buffer = strings.FieldsFunc(string(lines), split)
+	fmt.Println(strings.Join(buffer, ", "))
 
 	return Lexer{
 		index: 0,
-		buffer: []byte{},
-		stream: streamer,
+		buffer: buffer,
 		tokens: tokens,
 	}
 }
