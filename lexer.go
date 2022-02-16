@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -27,17 +26,32 @@ func replace_strings(source string) string {
 	return strs.ReplaceAllString(source, "@$0@")
 } 
 func replace_indentifiers(source string) string {
-	var buffer []string
-	blank := strop.ReplaceAllString(source, "")
+	string_literals := strs.FindAllStringSubmatch(source, -1)
+	strings_cleaned := strs.ReplaceAllString(source, "$")
+	// works 
+	blank := strop.ReplaceAllString(strings_cleaned, "")
 
-	buffer = indentifiers.FindAllString(blank, -1)
+	var buffer string = source
 	
-	var clean = removeDuplicateStr(buffer)
+	var clean = removeDuplicateStr(indentifiers.FindAllString(blank, -1))
 	for _, id := range(clean) {
-		source = strings.ReplaceAll(source, id, "@" + id + "@")
+		buffer = strings.ReplaceAll(strings_cleaned, id, "@" + id + "@")
 	}
 
-	return source
+	//
+	var final string
+	var counter = 0
+
+	for _, char := range(buffer) {
+		if (string(char) == "$") {
+			final = final + string_literals[counter][0]
+			counter++
+		} else {
+			final = final + string(char)
+		}
+	}
+	
+	return final
 } 
 
 
@@ -109,7 +123,6 @@ func lexer(file string) Lexer {
 	}
 
 	var stropped  = string(lines)
-
 	var patterns = []func(string) string{
 		replace_separators,
 		replace_keywords,
@@ -117,18 +130,16 @@ func lexer(file string) Lexer {
 		replace_strings,
 		replace_indentifiers,
 	}
-	
 
 	for _, pattern := range(patterns) {
 		stropped = pattern(stropped)
 	}
-
-	fmt.Println(stropped)
-
-	re := regexp.MustCompile(`@(.*?)@`)
-    buffer = re.FindAllString(stropped, -1)
 	
-	fmt.Println(strings.ReplaceAll(strings.Join(buffer, " "), "@", ""))
+
+	for _, word := range(strop.FindAllString(stropped, -1)) {
+		buffer = append(buffer, strings.ReplaceAll(word, "@", ""))
+	}
+
 
 	return Lexer{
 		index: 0,

@@ -30,7 +30,7 @@ func TestLexerHelloWorld(t *testing.T) {
 	file := "./snippets/hello_world.ll"
 	
 	var tokens []Token
-	
+
 	lexerer := lexer(file)
 	for !leof(&lexerer) {
 		token := lpeek(&lexerer)
@@ -69,7 +69,7 @@ var hello_human_tokens = []Token {
 	},
 	{
 		category: "string",
-		value: "What's your name?",
+		value: "Whats your name?",
 	},
 	{
 		category: "separator",
