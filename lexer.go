@@ -6,9 +6,41 @@ import (
 	"strings"
 )
 
-var separators = []string{"(", ")", "{", "}", " "}
-var keywords = []string{"const", "if", "else", "out", "in"}
-var operators = []string{"=", "==", "!=", "+", "-", "/", "*"}
+var separators = regexp.MustCompile("[(){}]")
+var keywords = regexp.MustCompile("const|if|else|out|in")
+var operators = regexp.MustCompile("\\=|\\==|\\!=|\\+|\\-|\\/|\\*")
+var strs = regexp.MustCompile("\"(.*?)\"")
+var indentifiers = regexp.MustCompile("[a-zA-Z]+")
+
+var strop = regexp.MustCompile("@(.*?)@")
+
+func replace_separators(source string) string {
+	return separators.ReplaceAllString(source, "@$0@")
+} 
+func replace_keywords(source string) string {
+	return keywords.ReplaceAllString(source, "@$0@")
+} 
+func replace_operators(source string) string {
+	return operators.ReplaceAllString(source, "@$0@")
+} 
+func replace_strings(source string) string {
+	return strs.ReplaceAllString(source, "@$0@")
+} 
+func replace_indentifiers(source string) string {
+	var buffer []string
+	blank := strop.ReplaceAllString(source, "")
+
+	buffer = indentifiers.FindAllString(blank, -1)
+	
+	var clean = removeDuplicateStr(buffer)
+	for _, id := range(clean) {
+		source = strings.ReplaceAll(source, id, "@" + id + "@")
+	}
+
+	return source
+} 
+
+
 
 type Lexer struct {
 	index int
@@ -24,33 +56,27 @@ type Token struct {
 // TODO: optimize with FSM for scanning possible next token first
 func evaluate(segment string) (Token, bool) {
 	// keywords
-	if (contains(segment, keywords)) {
+	if (matches(segment, *keywords)) {
 		return Token{ value: segment, category: "keyword"}, true
 	}
 	// separators
-	if (contains(segment, separators)) {
+	if (matches(segment, *separators)) {
 		return Token{ value: segment, category: "separator"}, true
 	}
 	// operators
-	if (contains(segment, operators)) {
+	if (matches(segment, *operators)) {
 		return Token{ value: segment, category: "operator"}, true
 	}
 	// strings
-	strings_match, _ := regexp.MatchString("\"(.*?)\"", segment)
-	if (strings_match) {
+	if (matches(segment, *strs)) {
 		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "string"}, true
 	}
 	// variables
-	variable, _ := regexp.MatchString("[a-zA-Z]+", segment)
-	if (variable) {
+	if (matches(segment, *indentifiers)) {
 		return Token{ value: segment, category: "variable"}, true
 	}
 
 	return Token{}, false
-}
-
-func split(r rune) bool {
-    return contains(string(r), separators)
 }
 
 func lpeek(l *Lexer) Token {
@@ -82,9 +108,27 @@ func lexer(file string) Lexer {
 		spop(&streamer)
 	}
 
-	re := regexp.MustCompile(`[^\s(){}"']+|([^\s"']*"([^"]*)"[^\s"']*)+|'([^']*)`)
-	buffer = re.FindAllString(string(lines), -1)
-	fmt.Println(strings.Join(buffer, ", "))
+	var stropped  = string(lines)
+
+	var patterns = []func(string) string{
+		replace_separators,
+		replace_keywords,
+		replace_operators,
+		replace_strings,
+		replace_indentifiers,
+	}
+	
+
+	for _, pattern := range(patterns) {
+		stropped = pattern(stropped)
+	}
+
+	fmt.Println(stropped)
+
+	re := regexp.MustCompile(`@(.*?)@`)
+    buffer = re.FindAllString(stropped, -1)
+	
+	fmt.Println(strings.ReplaceAll(strings.Join(buffer, " "), "@", ""))
 
 	return Lexer{
 		index: 0,
