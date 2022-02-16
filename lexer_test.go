@@ -43,9 +43,6 @@ func TestLexerHelloWorld(t *testing.T) {
 	assert.Equal(hello_world_tokens, tokens, "Lexer tokenizes 'hello_world' correctly")
 }
 
-// const name = in("What's your name?")
-// out("Hello " + name)
-
 var hello_human_tokens = []Token {
 	{
 		category: "keyword",
@@ -119,3 +116,133 @@ func TestLexerHelloHuman(t *testing.T) {
 	assert.Equal(hello_human_tokens, tokens, "Lexer tokenizes 'hello_human' correctly")
 }
 
+
+
+var greet_human_tokens = []Token {
+	{
+		category: "keyword",
+		value: "const",
+	},
+	{
+		category: "variable",
+		value: "greet",
+	},
+	{
+		category: "operator",
+		value: "=",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "variable",
+		value: "name",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "operator",
+		value: "=",
+	},
+	{
+		category: "operator",
+		value: ">",
+	},
+	{
+		category: "separator",
+		value: "{",
+	},
+	{
+		category: "keyword",
+		value: "out",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "string",
+		value: "Hello ",
+	},
+	{
+		category: "operator",
+		value: "+",
+	},
+	{
+		category: "variable",
+		value: "name",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "}",
+	},
+	{
+		category: "keyword",
+		value: "const",
+	},
+	{
+		category: "variable",
+		value: "name",
+	},
+	{
+		category: "operator",
+		value: "=",
+	},
+	{
+		category: "keyword",
+		value: "in",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "string",
+		value: "Whats your name?",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "variable",
+		value: "greet",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "variable",
+		value: "name",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+}
+
+func TestLexerGreetHuman(t *testing.T) {
+	assert := assert.New(t)
+	file := "./snippets/greet_human.ll"
+	
+	var tokens []Token
+	
+	lexerer := lexer(file)
+	for !leof(&lexerer) {
+		token := lpeek(&lexerer)
+
+		tokens = append(tokens, token)
+
+		lpop(&lexerer)
+	}
+
+	assert.Equal(greet_human_tokens, tokens, "Lexer tokenizes 'greet_human' correctly")
+}

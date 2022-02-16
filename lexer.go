@@ -7,7 +7,7 @@ import (
 
 var separators = regexp.MustCompile("[(){}]")
 var keywords = regexp.MustCompile("const|if|else|out|in")
-var operators = regexp.MustCompile("\\=|\\==|\\!=|\\+|\\-|\\/|\\*")
+var operators = regexp.MustCompile("\\=|\\==|\\!=|\\+|\\-|\\/|\\*|\\>")
 var strs = regexp.MustCompile("\"(.*?)\"")
 var indentifiers = regexp.MustCompile("[a-zA-Z]+")
 
@@ -28,17 +28,16 @@ func replace_strings(source string) string {
 func replace_indentifiers(source string) string {
 	string_literals := strs.FindAllStringSubmatch(source, -1)
 	strings_cleaned := strs.ReplaceAllString(source, "$")
-	// works 
-	blank := strop.ReplaceAllString(strings_cleaned, "")
 
+	blank := strop.ReplaceAllString(strings_cleaned, "     ")
 	var buffer string = source
 	
 	var clean = removeDuplicateStr(indentifiers.FindAllString(blank, -1))
 	for _, id := range(clean) {
-		buffer = strings.ReplaceAll(strings_cleaned, id, "@" + id + "@")
+		strings_cleaned = strings.ReplaceAll(strings_cleaned, id, "@" + id + "@")
+		buffer = strings_cleaned
 	}
 
-	//
 	var final string
 	var counter = 0
 
