@@ -8,19 +8,19 @@ import (
 
 var output_tokens = []Token {
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Hello World",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 }
@@ -45,55 +45,55 @@ func TestLexerOutput(t *testing.T) {
 
 var input_tokens = []Token {
 	{
-		category: "keyword",
+		category: "kw",
 		value: "const",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "in",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Whats your name?",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Hello ",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "+",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 }
@@ -120,111 +120,111 @@ func TestLexerInput(t *testing.T) {
 
 var function_tokens = []Token {
 	{
-		category: "keyword",
+		category: "kw",
 		value: "const",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "greet",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: ">",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "{",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Hello ",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "+",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "}",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "const",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "in",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Whats your name?",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "greet",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "name",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 }
@@ -250,99 +250,99 @@ func TestLexerFunction(t *testing.T) {
 
 var loop_tokens = []Token {
 	{
-		category: "keyword",
+		category: "kw",
 		value: "const",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "data",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "[",
 	},
 	{
-		category: "int",
+		category: "num",
 		value: 1,
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ",",
 	},
 	{
-		category: "int",
+		category: "num",
 		value: 2,
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ",",
 	},
 	{
-		category: "int",
+		category: "num",
 		value: 3,
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "]",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "for",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "element",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "of",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "data",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "{",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "element",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "+",
 	},
 	{
-		category: "int",
+		category: "num",
 		value: 10,
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "}",
 	},
 }
@@ -367,107 +367,107 @@ func TestLexerLoop(t *testing.T) {
 
 var conditional_tokens = []Token{
 	{
-		category: "keyword",
+		category: "kw",
 		value: "const",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "animal",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "=",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "in",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "Whats your favourite animal?",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "if",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "variable",
+		category: "var",
 		value: "animal",
 	},
 	{
-		category: "operator",
+		category: "op",
 		value: "==",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "frog",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "{",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "A man who enjoys culture I see",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "}",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "else",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "{",
 	},
 	{
-		category: "keyword",
+		category: "kw",
 		value: "out",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "(",
 	},
 	{
-		category: "string",
+		category: "str",
 		value: "I prefer frogs",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: ")",
 	},
 	{
-		category: "separator",
+		category: "punc",
 		value: "}",
 	},
 }

@@ -75,28 +75,28 @@ type Token struct {
 func evaluate(segment string) (Token, bool) {
 	// keywords
 	if (matches(segment, *keywords)) {
-		return Token{ value: segment, category: "keyword"}, true
+		return Token{ value: segment, category: "kw"}, true
 	}
 	// separators
 	if (matches(segment, *separators)) {
-		return Token{ value: segment, category: "separator"}, true
+		return Token{ value: segment, category: "punc"}, true
 	}
 	// operators
 	if (matches(segment, *operators)) {
-		return Token{ value: segment, category: "operator"}, true
+		return Token{ value: segment, category: "op"}, true
 	}
 	// strings
 	if (matches(segment, *strs)) {
-		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "string"}, true
+		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "str"}, true
 	}
 	//ints
 	if (matches(segment, *ints)) {
 		parsed, _ := strconv.Atoi(segment)
-		return Token{ value: parsed, category: "int"}, true
+		return Token{ value: parsed, category: "num"}, true
 	}
 	// variables
 	if (matches(segment, *indentifiers)) {
-		return Token{ value: segment, category: "variable"}, true
+		return Token{ value: segment, category: "var"}, true
 	}
 
 	return Token{}, false
