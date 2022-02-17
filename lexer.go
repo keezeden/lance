@@ -8,7 +8,7 @@ import (
 
 var separators = regexp.MustCompile("[(){}\\[\\]\\,]")
 var keywords = regexp.MustCompile("const|if|else|out|in|for|of")
-var operators = regexp.MustCompile("\\=|\\==|\\!=|\\+|\\-|\\/|\\*|\\>")
+var operators = regexp.MustCompile("(=){1,2}|\\!=|\\+|\\-|\\/|\\*|\\>")
 var strs = regexp.MustCompile("\"(.*?)\"")
 var ints = regexp.MustCompile("\\d+")
 var indentifiers = regexp.MustCompile("[a-zA-Z]+")

@@ -25,7 +25,7 @@ var output_tokens = []Token {
 	},
 }
 
-func TestLexerHelloWorld(t *testing.T) {
+func TestLexerOutput(t *testing.T) {
 	assert := assert.New(t)
 	file := "./snippets/output.ll"
 	
@@ -98,7 +98,7 @@ var input_tokens = []Token {
 	},
 }
 
-func TestLexerHelloHuman(t *testing.T) {
+func TestLexerInput(t *testing.T) {
 	assert := assert.New(t)
 	file := "./snippets/input.ll"
 	
@@ -229,7 +229,7 @@ var function_tokens = []Token {
 	},
 }
 
-func TestLexerGreetHuman(t *testing.T) {
+func TestLexerFunction(t *testing.T) {
 	assert := assert.New(t)
 	file := "./snippets/function.ll"
 	
@@ -363,4 +363,129 @@ func TestLexerLoop(t *testing.T) {
 	}
 
 	assert.Equal(loop_tokens, tokens, "Lexer tokenizes 'loop' correctly")
+}
+
+var conditional_tokens = []Token{
+	{
+		category: "keyword",
+		value: "const",
+	},
+	{
+		category: "variable",
+		value: "animal",
+	},
+	{
+		category: "operator",
+		value: "=",
+	},
+	{
+		category: "keyword",
+		value: "in",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "string",
+		value: "Whats your favourite animal?",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "keyword",
+		value: "if",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "variable",
+		value: "animal",
+	},
+	{
+		category: "operator",
+		value: "==",
+	},
+	{
+		category: "string",
+		value: "frog",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "{",
+	},
+	{
+		category: "keyword",
+		value: "out",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "string",
+		value: "A man who enjoys culture I see",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "}",
+	},
+	{
+		category: "keyword",
+		value: "else",
+	},
+	{
+		category: "separator",
+		value: "{",
+	},
+	{
+		category: "keyword",
+		value: "out",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "string",
+		value: "I prefer frogs",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "}",
+	},
+}
+
+func TestLexerConditional(t *testing.T) {
+	assert := assert.New(t)
+	file := "./snippets/conditional.ll"
+	
+	var tokens []Token
+
+	lexerer := lexer(file)
+	for !leof(&lexerer) {
+		token := lpeek(&lexerer)
+
+		tokens = append(tokens, token)
+
+		lpop(&lexerer)
+	}
+
+	assert.Equal(conditional_tokens, tokens, "Lexer tokenizes 'conditional' correctly")
 }
