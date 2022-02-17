@@ -2,13 +2,15 @@ package main
 
 import (
 	"regexp"
+	"strconv"
 	"strings"
 )
 
-var separators = regexp.MustCompile("[(){}]")
-var keywords = regexp.MustCompile("const|if|else|out|in")
+var separators = regexp.MustCompile("[(){}\\[\\]\\,]")
+var keywords = regexp.MustCompile("const|if|else|out|in|for|of")
 var operators = regexp.MustCompile("\\=|\\==|\\!=|\\+|\\-|\\/|\\*|\\>")
 var strs = regexp.MustCompile("\"(.*?)\"")
+var ints = regexp.MustCompile("\\d+")
 var indentifiers = regexp.MustCompile("[a-zA-Z]+")
 
 var strop = regexp.MustCompile("@(.*?)@")
@@ -24,6 +26,9 @@ func replace_operators(source string) string {
 } 
 func replace_strings(source string) string {
 	return strs.ReplaceAllString(source, "@$0@")
+} 
+func replace_ints(source string) string {
+	return ints.ReplaceAllString(source, "@$0@")
 } 
 func replace_indentifiers(source string) string {
 	string_literals := strs.FindAllStringSubmatch(source, -1)
@@ -63,7 +68,7 @@ type Lexer struct {
 
 type Token struct {
 	category string
-	value string
+	value interface{}
 }
 
 // TODO: optimize with FSM for scanning possible next token first
@@ -83,6 +88,11 @@ func evaluate(segment string) (Token, bool) {
 	// strings
 	if (matches(segment, *strs)) {
 		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "string"}, true
+	}
+	//ints
+	if (matches(segment, *ints)) {
+		parsed, _ := strconv.Atoi(segment)
+		return Token{ value: parsed, category: "int"}, true
 	}
 	// variables
 	if (matches(segment, *indentifiers)) {
@@ -127,6 +137,7 @@ func lexer(file string) Lexer {
 		replace_keywords,
 		replace_operators,
 		replace_strings,
+		replace_ints,
 		replace_indentifiers,
 	}
 

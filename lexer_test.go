@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var hello_world_tokens = []Token {
+var output_tokens = []Token {
 	{
 		category: "keyword",
 		value: "out",
@@ -27,7 +27,7 @@ var hello_world_tokens = []Token {
 
 func TestLexerHelloWorld(t *testing.T) {
 	assert := assert.New(t)
-	file := "./snippets/hello_world.ll"
+	file := "./snippets/output.ll"
 	
 	var tokens []Token
 
@@ -40,10 +40,10 @@ func TestLexerHelloWorld(t *testing.T) {
 		lpop(&lexerer)
 	}
 
-	assert.Equal(hello_world_tokens, tokens, "Lexer tokenizes 'hello_world' correctly")
+	assert.Equal(output_tokens, tokens, "Lexer tokenizes 'output' correctly")
 }
 
-var hello_human_tokens = []Token {
+var input_tokens = []Token {
 	{
 		category: "keyword",
 		value: "const",
@@ -100,7 +100,7 @@ var hello_human_tokens = []Token {
 
 func TestLexerHelloHuman(t *testing.T) {
 	assert := assert.New(t)
-	file := "./snippets/hello_human.ll"
+	file := "./snippets/input.ll"
 	
 	var tokens []Token
 	
@@ -113,12 +113,12 @@ func TestLexerHelloHuman(t *testing.T) {
 		lpop(&lexerer)
 	}
 
-	assert.Equal(hello_human_tokens, tokens, "Lexer tokenizes 'hello_human' correctly")
+	assert.Equal(input_tokens, tokens, "Lexer tokenizes 'input' correctly")
 }
 
 
 
-var greet_human_tokens = []Token {
+var function_tokens = []Token {
 	{
 		category: "keyword",
 		value: "const",
@@ -231,7 +231,7 @@ var greet_human_tokens = []Token {
 
 func TestLexerGreetHuman(t *testing.T) {
 	assert := assert.New(t)
-	file := "./snippets/greet_human.ll"
+	file := "./snippets/function.ll"
 	
 	var tokens []Token
 	
@@ -244,5 +244,123 @@ func TestLexerGreetHuman(t *testing.T) {
 		lpop(&lexerer)
 	}
 
-	assert.Equal(greet_human_tokens, tokens, "Lexer tokenizes 'greet_human' correctly")
+	assert.Equal(function_tokens, tokens, "Lexer tokenizes 'function' correctly")
+}
+
+
+var loop_tokens = []Token {
+	{
+		category: "keyword",
+		value: "const",
+	},
+	{
+		category: "variable",
+		value: "data",
+	},
+	{
+		category: "operator",
+		value: "=",
+	},
+	{
+		category: "separator",
+		value: "[",
+	},
+	{
+		category: "int",
+		value: 1,
+	},
+	{
+		category: "separator",
+		value: ",",
+	},
+	{
+		category: "int",
+		value: 2,
+	},
+	{
+		category: "separator",
+		value: ",",
+	},
+	{
+		category: "int",
+		value: 3,
+	},
+	{
+		category: "separator",
+		value: "]",
+	},
+	{
+		category: "keyword",
+		value: "for",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "variable",
+		value: "element",
+	},
+	{
+		category: "keyword",
+		value: "of",
+	},
+	{
+		category: "variable",
+		value: "data",
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "{",
+	},
+	{
+		category: "keyword",
+		value: "out",
+	},
+	{
+		category: "separator",
+		value: "(",
+	},
+	{
+		category: "variable",
+		value: "element",
+	},
+	{
+		category: "operator",
+		value: "+",
+	},
+	{
+		category: "int",
+		value: 10,
+	},
+	{
+		category: "separator",
+		value: ")",
+	},
+	{
+		category: "separator",
+		value: "}",
+	},
+}
+
+func TestLexerLoop(t *testing.T) {
+	assert := assert.New(t)
+	file := "./snippets/loop.ll"
+	
+	var tokens []Token
+
+	lexerer := lexer(file)
+	for !leof(&lexerer) {
+		token := lpeek(&lexerer)
+
+		tokens = append(tokens, token)
+
+		lpop(&lexerer)
+	}
+
+	assert.Equal(loop_tokens, tokens, "Lexer tokenizes 'loop' correctly")
 }
