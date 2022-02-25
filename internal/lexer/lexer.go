@@ -1,9 +1,11 @@
-package main
+package lexer
 
 import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	s "github.com/keezeden/lance/internal/stream"
 )
 
 var separators = regexp.MustCompile("[(){}\\[\\]\\,]")
@@ -119,16 +121,16 @@ func leof(l *Lexer) bool {
 
 
 func lexer(file string) Lexer {
-	streamer := stream(file)
+	stream := s.BuildStream(file)
 	var tokens []Token
 	var lines []byte
 	var buffer []string
 
-	for !seof(&streamer) {
-		char := speek(&streamer)
+	for !seof(&stream) {
+		char := speek(&stream)
 		lines = append(lines, char)
 
-		spop(&streamer)
+		spop(&stream)
 	}
 
 	var stropped  = string(lines)

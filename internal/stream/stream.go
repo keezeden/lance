@@ -1,7 +1,9 @@
-package main
+package stream
 
 import (
 	"os"
+
+	"github.com/keezeden/lance/pkg/utils"
 )
 
 type Stream struct {
@@ -9,23 +11,23 @@ type Stream struct {
 	buffer []byte
 }
 
-func speek(s *Stream) byte {
+func (s *Stream) Peek() byte {
 	char := s.buffer[s.index]
 	return char
 }
 
-func spop(s *Stream) {
+func (s *Stream) Pop() {
 	s.index++
 }
 
-func seof(s *Stream) bool {
+func (s *Stream) Eof() bool {
 	return s.index == len(s.buffer) 
 }
 
 
-func stream(file string) Stream {
+func BuildStream(file string) Stream {
 	content, err := os.ReadFile(file)
-    check(err)
+    utils.Check(err)
 
 	return Stream{
 		index: 0,

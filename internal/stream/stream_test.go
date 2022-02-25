@@ -1,27 +1,28 @@
-package main
+package stream
 
 import (
 	"os"
 	"testing"
 
+	"github.com/keezeden/lance/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestStream(t *testing.T) {
 	assert := assert.New(t)
-	file := "./snippets/example.ll"
+	file := "../../snippets/example.ll"
 	var chars []byte
 
 	content, err := os.ReadFile(file)
-	check(err)
+	utils.Check(err)
 
-	streamer := stream(file)
-	for !seof(&streamer) {
-		char := speek(&streamer)
+	streamer := BuildStream(file)
+	for !streamer.Eof() {
+		char := streamer.Peek()
 
 		chars = append(chars, char)
 
-		spop(&streamer)
+		streamer.Pop()
 	}
 
 	assert.Equal(content, chars, "File content is correct")

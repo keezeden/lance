@@ -1,4 +1,4 @@
-module keezeden/lance
+module github.com/keezeden/lance
 
 go 1.17
 
