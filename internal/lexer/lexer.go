@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	s "github.com/keezeden/lance/internal/stream"
+	"github.com/keezeden/lance/pkg/utils"
 )
 
 var separators = regexp.MustCompile("[(){}\\[\\]\\,]")
@@ -39,7 +40,7 @@ func replace_indentifiers(source string) string {
 	blank := strop.ReplaceAllString(strings_cleaned, "     ")
 	var buffer string = source
 	
-	var clean = removeDuplicateStr(indentifiers.FindAllString(blank, -1))
+	var clean = utils.RemoveDuplicateStrings(indentifiers.FindAllString(blank, -1))
 	for _, id := range(clean) {
 		strings_cleaned = strings.ReplaceAll(strings_cleaned, id, "@" + id + "@")
 		buffer = strings_cleaned
@@ -69,68 +70,68 @@ type Lexer struct {
 }
 
 type Token struct {
-	category string
-	value interface{}
+	Type string
+	Value interface{}
 }
 
 // TODO: optimize with FSM for scanning possible next token first
 func evaluate(segment string) (Token, bool) {
 	// keywords
-	if (matches(segment, *keywords)) {
-		return Token{ value: segment, category: "kw"}, true
+	if (utils.Matches(segment, *keywords)) {
+		return Token{ Value: segment, Type: "kw"}, true
 	}
 	// separators
-	if (matches(segment, *separators)) {
-		return Token{ value: segment, category: "punc"}, true
+	if (utils.Matches(segment, *separators)) {
+		return Token{ Value: segment, Type: "punc"}, true
 	}
 	// operators
-	if (matches(segment, *operators)) {
-		return Token{ value: segment, category: "op"}, true
+	if (utils.Matches(segment, *operators)) {
+		return Token{ Value: segment, Type: "op"}, true
 	}
 	// strings
-	if (matches(segment, *strs)) {
-		return Token{ value: strings.Replace(segment, "\"", "", -1), category: "str"}, true
+	if (utils.Matches(segment, *strs)) {
+		return Token{ Value: strings.Replace(segment, "\"", "", -1), Type: "str"}, true
 	}
 	//ints
-	if (matches(segment, *ints)) {
+	if (utils.Matches(segment, *ints)) {
 		parsed, _ := strconv.Atoi(segment)
-		return Token{ value: parsed, category: "num"}, true
+		return Token{ Value: parsed, Type: "num"}, true
 	}
 	// variables
-	if (matches(segment, *indentifiers)) {
-		return Token{ value: segment, category: "var"}, true
+	if (utils.Matches(segment, *indentifiers)) {
+		return Token{ Value: segment, Type: "var"}, true
 	}
 
 	return Token{}, false
 }
 
-func lpeek(l *Lexer) Token {
-	 token, _ := evaluate(l.buffer[l.index])
+func (l *Lexer) Peek() Token {
+	token, _ := evaluate(l.buffer[l.index])
 
 	 return token
 }
 
 
-func lpop(l *Lexer) {
+func (l *Lexer) Pop() {
 	l.index++
 }
 
-func leof(l *Lexer) bool {
+func (l *Lexer) Eof() bool {
 	return l.index == len(l.buffer) 
 }
 
 
-func lexer(file string) Lexer {
-	stream := s.BuildStream(file)
+func BuildLexer(file string) Lexer {
+	streamer := s.BuildStream(file)
 	var tokens []Token
 	var lines []byte
 	var buffer []string
 
-	for !seof(&stream) {
-		char := speek(&stream)
+	for !streamer.Eof() {
+		char := streamer.Peek()
 		lines = append(lines, char)
 
-		spop(&stream)
+		streamer.Pop()
 	}
 
 	var stropped  = string(lines)
