@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	s "github.com/keezeden/lance/internal/stream"
+	"github.com/keezeden/lance/internal/stream"
 	"github.com/keezeden/lance/pkg/utils"
 )
 
@@ -122,7 +122,7 @@ func (l *Lexer) Eof() bool {
 
 
 func BuildLexer(file string) Lexer {
-	streamer := s.BuildStream(file)
+	streamer := stream.BuildStream(file)
 	var tokens []Token
 	var lines []byte
 	var buffer []string
