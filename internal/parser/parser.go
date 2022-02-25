@@ -1,11 +1,13 @@
 package parser
 
+import "github.com/keezeden/lance/internal/lexer"
+
 type Parser struct {
 	tree interface{}
-	lexer Lexer
+	lexer lexer.Lexer
 }
 
-func (p* Parser) parse() map[string]interface{} {
+func (p* Parser) Parse() map[string]interface{} {
 	// for !leof(&p.lexer) {
 
 	// 	token := lpeek(&p.lexer)
@@ -20,7 +22,7 @@ func (p* Parser) parse() map[string]interface{} {
 	return map[string]interface{}{}
 }
 
-func parser(lexer Lexer) Parser {
+func BuildParser(lexer lexer.Lexer) Parser {
 	tree := []string{}
 	return Parser{
 		tree: tree,

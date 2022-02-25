@@ -1,8 +1,9 @@
-package main
+package parser
 
 import (
 	"testing"
 
+	"github.com/keezeden/lance/internal/lexer"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,10 +33,10 @@ func TestParserMath(t *testing.T) {
 	assert := assert.New(t)
 	file := "./snippets/math.ll"
 
-	lexerer := lexer(file)
-	parser := parser(lexerer)
+	lexerer := lexer.BuildLexer(file)
+	parser := BuildParser(lexerer)
 
-	ast := parser.parse()
+	ast := parser.Parse()
 
 	assert.Equal(ast, math_ast, "Parser parses 'math' correctly")
 }
