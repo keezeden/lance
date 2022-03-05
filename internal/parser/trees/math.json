@@ -1,0 +1,20 @@
+{
+  "type": "program",
+  "body": [
+    {
+      "type": "expression",
+      "operator": "+",
+      "body": [
+        { "type": "literal", "value": 1 },
+        {
+          "type": "expression",
+          "operator": "+",
+          "body": [
+            { "type": "literal", "value": 2 },
+            { "type": "literal", "value": 3 }
+          ]
+        }
+      ]
+    }
+  ]
+}

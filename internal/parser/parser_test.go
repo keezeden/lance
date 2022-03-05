@@ -1,42 +1,36 @@
 package parser
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/keezeden/lance/internal/lexer"
 	"github.com/stretchr/testify/assert"
 )
 
-var math_ast = map[string]interface{}{
-	"type": "progam",
-	"body": map[string]interface{}{
-		"type": "literal",
-		"expression": map[string]interface{}{
-			"operator": "+",
-			"body": []map[string]interface{}{
-				{ "type": "literal", "value": "1"  },
-				{
-					"expression": map[string]interface{}{
-						"operator": "+",
-						"body": []map[string]interface{}{
-							{ "type": "literal", "value": "2"  },
-							{ "type": "literal", "value": "3"  },
-						},
-					},
-				},
-			},
-		},
-	},
-}
+var MathAST map[string]interface{}
+var content, _ = os.ReadFile("./trees/math.json")
+
+var _ = json.Unmarshal(content, &MathAST)
+
 
 func TestParserMath(t *testing.T) {
 	assert := assert.New(t)
-	file := "./snippets/math.ll"
+	file := "../../snippets/math.ll"
 
 	lexerer := lexer.BuildLexer(file)
 	parser := BuildParser(lexerer)
 
 	ast := parser.Parse()
 
-	assert.Equal(ast, math_ast, "Parser parses 'math' correctly")
+	js, err := json.Marshal(ast)
+if err != nil {
+    log.Fatal("EROROROROROROR", err)
+}
+fmt.Println(string(js))
+
+	assert.Equal(ast, MathAST, "Parser parses 'math' correctly")
 }
