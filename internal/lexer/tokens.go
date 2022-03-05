@@ -1,392 +1,415 @@
 package lexer
 
-var OutputTokens = []Token {
+var OutputTokens = []Token{
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Hello World",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 }
 
-var InputTokens = []Token {
+var InputTokens = []Token{
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "const",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "in",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Whats your name?",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Hello ",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "+",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 }
 
-var FunctionTokens = []Token {
+var FunctionTokens = []Token{
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "const",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "greet",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: ">",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "{",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Hello ",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "+",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "}",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "const",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "in",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Whats your name?",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "greet",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "name",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 }
 
-var LoopTokens = []Token {
+var LoopTokens = []Token{
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "const",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "data",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "[",
 	},
 	{
-		Type: "num",
+		Type:  "num",
 		Value: 1,
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ",",
 	},
 	{
-		Type: "num",
+		Type:  "num",
 		Value: 2,
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ",",
 	},
 	{
-		Type: "num",
+		Type:  "num",
 		Value: 3,
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "]",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "for",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "element",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "of",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "data",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "{",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "element",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "+",
 	},
 	{
-		Type: "num",
+		Type:  "num",
 		Value: 10,
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "}",
 	},
 }
 
-var ConditionalTokens = []Token {
+var ConditionalTokens = []Token{
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "const",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "animal",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "=",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "in",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "Whats your favourite animal?",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "if",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "var",
+		Type:  "var",
 		Value: "animal",
 	},
 	{
-		Type: "op",
+		Type:  "op",
 		Value: "==",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "frog",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "{",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "A man who enjoys culture I see",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "}",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "else",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "{",
 	},
 	{
-		Type: "kw",
+		Type:  "kw",
 		Value: "out",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "(",
 	},
 	{
-		Type: "str",
+		Type:  "str",
 		Value: "I prefer frogs",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: ")",
 	},
 	{
-		Type: "punc",
+		Type:  "punc",
 		Value: "}",
+	},
+}
+
+var MathTokens = []Token{
+	{
+		Type:  "num",
+		Value: 1,
+	},
+	{
+		Type:  "op",
+		Value: "+",
+	},
+	{
+		Type:  "num",
+		Value: 2,
+	},
+	{
+		Type:  "op",
+		Value: "+",
+	},
+	{
+		Type:  "num",
+		Value: 3,
 	},
 }

@@ -44,6 +44,12 @@ var tests = []TestCase{
 		Input: "../../snippets/conditional.ll",
 		ExpectedOutput: ConditionalTokens, 
 	},
+	{
+		Name: "Math Snippet",
+		Description: "Lexer tokenizes 'math' correctly",
+		Input: "../../snippets/math.ll",
+		ExpectedOutput: MathTokens, 
+	},
 }
 
 
