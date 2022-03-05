@@ -1,0 +1,10 @@
+{
+  "type": "program",
+  "body": [
+    {
+      "type": "call",
+      "identifier": "out",
+      "arguments": [{ "type": "literal", "value": "Hello World" }]
+    }
+  ]
+}

@@ -30,7 +30,7 @@ func (p* Parser) ParseVar() Node {
 		return nil
 	}
 	token := p.lexer.Peek()
-	if (token.Type == "var") {
+	if (token.Type == "var" || token.Type == "kw") {
 		p.lexer.Pop()
 		return p.BuildVar(token)
 	}
@@ -38,12 +38,38 @@ func (p* Parser) ParseVar() Node {
 	return nil
 }
 
+func (p* Parser) ParseOpenParenthesis() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "punc" && token.Value == "(") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
+func (p* Parser) ParseClosedParenthesis() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "punc" && token.Value == ")") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
 func (p* Parser) ParseLiteral() Node {
 	if (p.lexer.Eof()) {
 		return nil
 	}
 	token := p.lexer.Peek()
-	if (token.Type == "string" || token.Type == "num") {
+	if (token.Type == "str" || token.Type == "num") {
 		p.lexer.Pop()
 		return p.BuildLiteral(token)
 	}
@@ -58,7 +84,10 @@ func (p* Parser) BuildOperator(token lexer.Token) Node {
 }
 
 func (p* Parser) BuildVar(token lexer.Token) Node {
-	return Node{}
+	return Node{
+		"type": "variable",
+		"name": token.Value,
+	}
 }
 
 func (p* Parser) BuildLiteral(token lexer.Token) Node {
@@ -78,18 +107,50 @@ func (p* Parser) BuildExpression(rhs Node, operator Node, lhs Node) Node {
 	  }
 }
 
+func (p* Parser) BuildCall(identifier Node, terms Node) Node {
+	arguments := []Node{terms}
+	return Node{
+		"type": "call",
+		"identifier": identifier["name"],
+		"arguments": arguments,
+	  }
+}
+
 func (p* Parser) ParseTerms() Node {
 	sideNode := p.ParseVar()
 	if (sideNode != nil) {
 		return sideNode
 	}	
-
 	sideNode = p.ParseLiteral()
 	if (sideNode != nil) {
 		return sideNode
 	}
 
 	return nil
+}
+
+func (p* Parser) ParseCall() Node {
+	varNode := p.ParseVar()
+	if (varNode == nil) {
+		return nil
+	}
+	
+	isOpenParenthesis := p.ParseOpenParenthesis()
+	if (!isOpenParenthesis) {
+		return nil
+	}
+
+	termNode := p.ParseTerms()
+	if (termNode == nil) {
+		return nil
+	}
+
+	isClosedParenthesis := p.ParseClosedParenthesis()
+	if (!isClosedParenthesis) {
+		return nil
+	}
+
+	return p.BuildCall(varNode, termNode)
 }
 
 func (p* Parser) ParseAppendedTerms() (Node, Node) {
@@ -126,9 +187,23 @@ func (p* Parser) ParseExpression() Node {
 	return p.BuildExpression(termsNode, operatorNode, extraTermsNode)
 }
 
+func (p* Parser) ParseStatement() Node {
+	callNode := p.ParseCall()
+	if (callNode != nil) {
+		return callNode
+	}
+
+	expressionNode := p.ParseExpression()
+	if (expressionNode != nil) {
+		return expressionNode
+	}
+
+	return nil
+}
+
 // expression = literal | expression
 func (p* Parser) Parse() Node {	
-	treeNode := p.ParseExpression()
+	treeNode := p.ParseStatement()
 
 	if (treeNode == nil) {
 		return nil
