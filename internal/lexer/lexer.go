@@ -108,7 +108,7 @@ func evaluate(segment string) (Token, bool) {
 func (l *Lexer) Peek() Token {
 	token, _ := evaluate(l.buffer[l.index])
 
-	 return token
+	return token
 }
 
 

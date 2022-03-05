@@ -2,8 +2,6 @@ package parser
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"os"
 	"testing"
 
@@ -11,11 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var MathAST map[string]interface{}
-var content, _ = os.ReadFile("./trees/math.json")
-
-var _ = json.Unmarshal(content, &MathAST)
-
+var expectedBytes, _ = os.ReadFile("./trees/math.json")
 
 func TestParserMath(t *testing.T) {
 	assert := assert.New(t)
@@ -26,11 +20,9 @@ func TestParserMath(t *testing.T) {
 
 	ast := parser.Parse()
 
-	js, err := json.Marshal(ast)
-if err != nil {
-    log.Fatal("EROROROROROROR", err)
-}
-fmt.Println(string(js))
+	actualBytes, _ := json.Marshal(ast)
 
-	assert.Equal(ast, MathAST, "Parser parses 'math' correctly")
+	// this comparison is ordering sensitive
+	// TODO: make this not sensitive lol
+	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'math' correctly")
 }

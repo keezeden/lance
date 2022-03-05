@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/keezeden/lance/internal/lexer"
 )
 
@@ -15,48 +13,58 @@ type Node = map[string]interface{}
 
 
 func (p* Parser) ParseOperator() Node {
+	if (p.lexer.Eof()) {
+		return nil
+	}
 	token := p.lexer.Peek()
 	if (token.Type == "op") {
 		p.lexer.Pop()
-		return p.BuildOperator(token.Value)
+		return p.BuildOperator(token)
 	} 
 
 	return nil
 }
 
 func (p* Parser) ParseVar() Node {
+	if (p.lexer.Eof()) {
+		return nil
+	}
 	token := p.lexer.Peek()
 	if (token.Type == "var") {
 		p.lexer.Pop()
-		return p.BuildVar(token.Value)
+		return p.BuildVar(token)
 	}
 
 	return nil
 }
 
 func (p* Parser) ParseLiteral() Node {
+	if (p.lexer.Eof()) {
+		return nil
+	}
 	token := p.lexer.Peek()
 	if (token.Type == "string" || token.Type == "num") {
 		p.lexer.Pop()
-		return p.BuildLiteral(token.Value)
+		return p.BuildLiteral(token)
 	}
 
 	return nil
 }
 
-func (p* Parser) BuildOperator(operator interface{}) Node {
+func (p* Parser) BuildOperator(token lexer.Token) Node {
 	return Node{
-		"op": operator,
+		"op": token.Value,
 	}
 }
 
-func (p* Parser) BuildVar(variable interface{}) Node {
+func (p* Parser) BuildVar(token lexer.Token) Node {
 	return Node{}
 }
 
-func (p* Parser) BuildLiteral(literal interface{}) Node {
+func (p* Parser) BuildLiteral(token lexer.Token) Node {
 	return Node{
-		"literal": literal,
+		"type": "literal",
+		"value": token.Value,
 	}
 }
 
@@ -70,13 +78,8 @@ func (p* Parser) BuildExpression(rhs Node, operator Node, lhs Node) Node {
 	  }
 }
 
-func (p* Parser) ParseSide() Node {
-	sideNode := p.ParseExpression()
-	if (sideNode != nil) {
-		return sideNode
-	}
-
-	sideNode = p.ParseVar()
+func (p* Parser) ParseTerms() Node {
+	sideNode := p.ParseVar()
 	if (sideNode != nil) {
 		return sideNode
 	}	
@@ -85,29 +88,42 @@ func (p* Parser) ParseSide() Node {
 	if (sideNode != nil) {
 		return sideNode
 	}
-	
+
 	return nil
 }
 
-func (p* Parser) ParseExpression() Node {
-	rhsNode := p.ParseSide()
-	if (rhsNode == nil) {
-		return nil
-	}
-
+func (p* Parser) ParseAppendedTerms() (Node, Node) {
 	operatorNode := p.ParseOperator()
-	fmt.Println("OP NODE", operatorNode)
 	if (operatorNode == nil) {
-		return operatorNode
+		return nil, nil
 	}
 
-	lhsNode := p.ParseSide()
-	fmt.Println("LHS NODE", lhsNode)
-	if (lhsNode == nil) {
+	termsNode := p.ParseTerms()
+	if (termsNode == nil) {
+		return operatorNode, nil
+	}
+
+	appendedOperatorTerms, appendedTermTerms := p.ParseAppendedTerms()
+	if (appendedOperatorTerms != nil && appendedTermTerms != nil) {
+		return operatorNode, p.BuildExpression(termsNode, appendedOperatorTerms, appendedTermTerms)
+	}
+
+	return operatorNode, termsNode
+}
+
+
+func (p* Parser) ParseExpression() Node {
+	termsNode := p.ParseTerms()
+	if (termsNode == nil) {
 		return nil
 	}
 
-	return p.BuildExpression(rhsNode, operatorNode, lhsNode)
+	operatorNode, extraTermsNode := p.ParseAppendedTerms()
+	if (operatorNode == nil || extraTermsNode == nil) {
+		return nil
+	}
+
+	return p.BuildExpression(termsNode, operatorNode, extraTermsNode)
 }
 
 // expression = literal | expression
