@@ -1,0 +1,24 @@
+{
+  "body": [
+    {
+      "body": [{ "arguments": [{ "type": "literal", "value": "Whats your name?" }], "identifier": "in", "type": "call" }],
+      "identifier": "name",
+      "type": "assignment"
+    },
+    {
+      "arguments": [
+        {
+          "body": [
+            { "name": "name", "type": "variable" },
+            { "type": "literal", "value": "Hello " }
+          ],
+          "operator": "+",
+          "type": "expression"
+        }
+      ],
+      "identifier": "out",
+      "type": "call"
+    }
+  ],
+  "type": "program"
+}

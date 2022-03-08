@@ -39,6 +39,20 @@ func TestParserOutput(t *testing.T) {
 	actualBytes, _ := json.Marshal(ast)
 	expectedBytes, _ := os.ReadFile("./trees/output.json")
 
-
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'output' correctly")
+}
+
+func TestParserInput(t *testing.T) {
+	assert := assert.New(t)
+	file := "../../snippets/input.ll"
+
+	lexerer := lexer.BuildLexer(file)
+	parser := BuildParser(lexerer)
+
+	ast := parser.Parse()
+
+	actualBytes, _ := json.Marshal(ast)
+	expectedBytes, _ := os.ReadFile("./trees/input.json")
+
+	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'input' correctly")
 }
