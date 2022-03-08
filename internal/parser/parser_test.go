@@ -56,3 +56,18 @@ func TestParserInput(t *testing.T) {
 
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'input' correctly")
 }
+
+func TestConditionalInput(t *testing.T) {
+	assert := assert.New(t)
+	file := "../../snippets/conditional.ll"
+
+	lexerer := lexer.BuildLexer(file)
+	parser := BuildParser(lexerer)
+
+	ast := parser.Parse()
+
+	actualBytes, _ := json.Marshal(ast)
+	expectedBytes, _ := os.ReadFile("./trees/conditional.json")
+
+	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'input' correctly")
+}

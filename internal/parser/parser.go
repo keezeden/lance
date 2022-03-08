@@ -77,6 +77,57 @@ func (p* Parser) ParseEquals() bool {
 	return false
 }
 
+func (p* Parser) ParseOpenBracket() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "punc" && token.Value == "{") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+func (p* Parser) ParseClosedBracket() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "punc" && token.Value == "}") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
+func (p* Parser) ParseIf() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "kw" && token.Value == "if") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
+func (p* Parser) ParseElse() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "kw" && token.Value == "else") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
 func (p* Parser) ParseConst() bool {
 	if (p.lexer.Eof()) {
 		return false
@@ -148,6 +199,15 @@ func (p* Parser) BuildCall(identifier Node, terms Node) Node {
 		"type": "call",
 		"identifier": identifier["name"],
 		"arguments": arguments,
+	  }
+}
+
+func (p* Parser) BuildConditional(condition Node, ifStatement Node, elseStatement Node) Node {
+	return Node{
+		"type": "conditional",
+		"body": condition,
+		"if": ifStatement,
+		"else": elseStatement,
 	  }
 }
 
@@ -256,10 +316,74 @@ func (p* Parser) ParseAssignment() Node {
 	return nil
 }
 
+func (p* Parser) ParseConditional() Node {
+	isIf := p.ParseIf()
+	if (!isIf) {
+		return nil
+	}
+
+	isIfOpenParenthesis := p.ParseOpenParenthesis()
+	if (!isIfOpenParenthesis) {
+		return nil
+	}
+
+	ifExpressionNode := p.ParseExpression()
+	if (ifExpressionNode == nil) {
+		return nil
+	}
+
+	isIfClosedParenthesis := p.ParseClosedParenthesis()
+	if (!isIfClosedParenthesis) {
+		return nil
+	}
+
+	isIfOpenBracket := p.ParseOpenBracket()
+	if (!isIfOpenBracket) {
+		return nil
+	}
+
+	ifStatementNode := p.ParseStatement()
+	if (ifStatementNode == nil) {
+		return nil
+	}
+	
+	isClosedBracket := p.ParseClosedBracket()
+	if (!isClosedBracket) {
+		return nil
+	}
+
+	isElse := p.ParseElse()
+	if (!isElse) {
+		return nil
+	}
+
+	isElseOpenBracket := p.ParseOpenBracket()
+	if (!isElseOpenBracket) {
+		return nil
+	}
+
+	elseStatementNode := p.ParseStatement()
+	if (elseStatementNode == nil) {
+		return nil
+	}
+	
+	isElseClosedBracket := p.ParseClosedBracket()
+	if (!isElseClosedBracket) {
+		return nil
+	}
+
+	return p.BuildConditional(ifExpressionNode, ifStatementNode, elseStatementNode)
+}
+
 func (p* Parser) ParseStatement() Node {
 	assignmentNode := p.ParseAssignment()
 	if (assignmentNode != nil) {
 		return assignmentNode
+	}
+
+	conditionalNode := p.ParseConditional()
+	if (conditionalNode != nil) {
+		return conditionalNode
 	}
 
 	callNode := p.ParseCall()
