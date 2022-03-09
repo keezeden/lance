@@ -22,7 +22,7 @@
           "value": 0
         }
       ],
-      "identifier": "i",
+      "identifier": "idex",
       "type": "assignment"
     },
     {
@@ -33,11 +33,15 @@
         "body": [
           {
             "type": "variable",
-            "name": "data.length"
+            "name": "length",
+            "parent": {
+              "type": "variable",
+              "name": "data"
+            }
           },
           {
             "type": "variable",
-            "name": "i"
+            "name": "idex"
           }
         ]
       },
@@ -50,11 +54,23 @@
               "type": "expression",
               "operator": "+",
               "body": [
-                { "type": "variable", "name": "element" },
+                { "type": "variable", "name": "idex" },
                 { "type": "literal", "value": 10 }
               ]
             }
           ]
+        },
+        {
+          "type": "assignment",
+          "identifier": "idex",
+          "body": {
+            "type": "expression",
+            "operator": "+",
+            "body": [
+              { "type": "variable", "name": "idex" },
+              { "type": "literal", "value": 1 }
+            ]
+          }
         }
       ]
     }

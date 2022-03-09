@@ -86,3 +86,4 @@ func TestLoopInput(t *testing.T) {
 
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'loop' correctly")
 }
+
