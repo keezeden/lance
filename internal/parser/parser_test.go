@@ -71,3 +71,18 @@ func TestConditionalInput(t *testing.T) {
 
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'input' correctly")
 }
+
+func TestLoopInput(t *testing.T) {
+	assert := assert.New(t)
+	file := "../../snippets/loop.ll"
+
+	lexerer := lexer.BuildLexer(file)
+	parser := BuildParser(lexerer)
+
+	ast := parser.Parse()
+
+	actualBytes, _ := json.Marshal(ast)
+	expectedBytes, _ := os.ReadFile("./trees/loop.json")
+
+	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'loop' correctly")
+}

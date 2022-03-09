@@ -1,0 +1,62 @@
+{
+  "type": "program",
+  "body": [
+    {
+      "body": [
+        {
+          "type": "array",
+          "value": [
+            { "type": "literal", "value": "1" },
+            { "type": "literal", "value": "2" },
+            { "type": "literal", "value": "3" }
+          ]
+        }
+      ],
+      "identifier": "data",
+      "type": "assignment"
+    },
+    {
+      "body": [
+        {
+          "type": "literal",
+          "value": 0
+        }
+      ],
+      "identifier": "i",
+      "type": "assignment"
+    },
+    {
+      "type": "loop",
+      "condition": {
+        "type": "expression",
+        "operator": "<",
+        "body": [
+          {
+            "type": "variable",
+            "name": "data.length"
+          },
+          {
+            "type": "variable",
+            "name": "i"
+          }
+        ]
+      },
+      "body": [
+        {
+          "type": "call",
+          "name": "out",
+          "arguments": [
+            {
+              "type": "expression",
+              "operator": "+",
+              "body": [
+                { "type": "variable", "name": "element" },
+                { "type": "literal", "value": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

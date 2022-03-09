@@ -1,12 +1,20 @@
 {
   "body": [
     {
-      "body": [{ "arguments": [{ "type": "literal", "value": "Whats your favourite animal?" }], "identifier": "in", "type": "call" }],
+      "body": [
+        {
+          "arguments": [
+            { "type": "literal", "value": "Whats your favourite animal?" }
+          ],
+          "identifier": "in",
+          "type": "call"
+        }
+      ],
       "identifier": "animal",
       "type": "assignment"
     },
     {
-      "body": {
+      "condition": {
         "body": [
           { "type": "literal", "value": "frog" },
           { "name": "animal", "type": "variable" }
@@ -14,8 +22,18 @@
         "operator": "==",
         "type": "expression"
       },
-      "else": { "arguments": [{ "type": "literal", "value": "I prefer frogs" }], "identifier": "out", "type": "call" },
-      "if": { "arguments": [{ "type": "literal", "value": "A man who enjoys culture I see" }], "identifier": "out", "type": "call" },
+      "else": {
+        "arguments": [{ "type": "literal", "value": "I prefer frogs" }],
+        "identifier": "out",
+        "type": "call"
+      },
+      "if": {
+        "arguments": [
+          { "type": "literal", "value": "A man who enjoys culture I see" }
+        ],
+        "identifier": "out",
+        "type": "call"
+      },
       "type": "conditional"
     }
   ],

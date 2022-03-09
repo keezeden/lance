@@ -205,7 +205,7 @@ func (p* Parser) BuildCall(identifier Node, terms Node) Node {
 func (p* Parser) BuildConditional(condition Node, ifStatement Node, elseStatement Node) Node {
 	return Node{
 		"type": "conditional",
-		"body": condition,
+		"condition": condition,
 		"if": ifStatement,
 		"else": elseStatement,
 	  }

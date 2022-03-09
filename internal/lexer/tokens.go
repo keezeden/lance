@@ -228,7 +228,23 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "kw",
-		Value: "for",
+		Value: "const",
+	},
+	{
+		Type:  "var",
+		Value: "idex",
+	},
+	{
+		Type:  "op",
+		Value: "=",
+	},
+	{
+		Type:  "num",
+		Value: 0,
+	},
+	{
+		Type:  "kw",
+		Value: "while",
 	},
 	{
 		Type:  "punc",
@@ -236,15 +252,23 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "element",
+		Value: "idex",
 	},
 	{
-		Type:  "kw",
-		Value: "of",
+		Type:  "op",
+		Value: "<",
 	},
 	{
 		Type:  "var",
 		Value: "data",
+	},
+	{
+		Type:  "punc",
+		Value: ".",
+	},
+	{
+		Type:  "var",
+		Value: "length",
 	},
 	{
 		Type:  "punc",
@@ -264,7 +288,19 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "element",
+		Value: "data",
+	},
+	{
+		Type:  "punc",
+		Value: "[",
+	},
+	{
+		Type:  "var",
+		Value: "idex",
+	},
+	{
+		Type:  "punc",
+		Value: "]",
 	},
 	{
 		Type:  "op",
@@ -277,6 +313,26 @@ var LoopTokens = []Token{
 	{
 		Type:  "punc",
 		Value: ")",
+	},
+	{
+		Type:  "var",
+		Value: "idex",
+	},
+	{
+		Type:  "op",
+		Value: "=",
+	},
+	{
+		Type:  "var",
+		Value: "idex",
+	},
+	{
+		Type:  "op",
+		Value: "+",
+	},
+	{
+		Type:  "num",
+		Value: 1,
 	},
 	{
 		Type:  "punc",

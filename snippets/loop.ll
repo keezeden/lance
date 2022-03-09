@@ -1,5 +1,7 @@
 const data = [1,2,3]
+const idex = 0
 
-for (element of data) {
-    out(element + 10)
+while (idex < data.length) {
+    out(data[idex] + 10)
+    idex = idex + 1
 }
