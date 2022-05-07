@@ -30,7 +30,7 @@ func main() {
 	  ast := parserer.Parse()
 	  bytes, _ := json.Marshal(ast)
 
-	  err := os.WriteFile("../output.json", bytes, 0644)
+	  err := os.WriteFile("./output.json", bytes, 0644)
 	  if err != nil {
 		log.Fatal(err)
 	  }
