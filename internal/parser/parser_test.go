@@ -2,13 +2,13 @@ package parser
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 
 	"github.com/keezeden/lance/internal/lexer"
 	"github.com/stretchr/testify/assert"
 )
-
 
 func TestParserMath(t *testing.T) {
 	assert := assert.New(t)
@@ -82,6 +82,7 @@ func TestLoopInput(t *testing.T) {
 	ast := parser.Parse()
 
 	actualBytes, _ := json.Marshal(ast)
+	fmt.Println(string(actualBytes))
 	expectedBytes, _ := os.ReadFile("./trees/loop.json")
 
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'loop' correctly")

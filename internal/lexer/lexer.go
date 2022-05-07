@@ -10,7 +10,7 @@ import (
 )
 
 var separators = regexp.MustCompile("[(){}\\[\\]\\,\\.]")
-var keywords = regexp.MustCompile("const|if|else|out|in|while")
+var keywords = regexp.MustCompile("const|let|if|else|out|in|while")
 var operators = regexp.MustCompile("(=){1,2}|\\!=|\\+|\\-|\\/|\\*|\\>|\\<")
 var strs = regexp.MustCompile("\"(.*?)\"")
 var ints = regexp.MustCompile("\\d+")

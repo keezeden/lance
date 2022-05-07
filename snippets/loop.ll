@@ -1,7 +1,8 @@
 const data = [1,2,3]
-const idex = 0
+const iterations = 3
+let count = 0
 
-while (idex < data.length) {
-    out(data[idex] + 10)
-    idex = idex + 1
+while (count < data) {
+    out(data[count] + 10)    
+    count = count + 1
 }

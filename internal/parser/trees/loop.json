@@ -1,14 +1,22 @@
 {
-  "type": "program",
   "body": [
     {
       "body": [
         {
           "type": "array",
           "value": [
-            { "type": "literal", "value": "1" },
-            { "type": "literal", "value": "2" },
-            { "type": "literal", "value": "3" }
+            {
+              "type": "literal",
+              "value": 1
+            },
+            {
+              "type": "literal",
+              "value": 2
+            },
+            {
+              "type": "literal",
+              "value": 3
+            }
           ]
         }
       ],
@@ -19,60 +27,92 @@
       "body": [
         {
           "type": "literal",
-          "value": 0
+          "value": 3
         }
       ],
-      "identifier": "idex",
+      "identifier": "iterations",
       "type": "assignment"
     },
     {
-      "type": "loop",
-      "condition": {
-        "type": "expression",
-        "operator": "<",
-        "body": [
-          {
-            "type": "variable",
-            "name": "length",
-            "parent": {
-              "type": "variable",
-              "name": "data"
-            }
-          },
-          {
-            "type": "variable",
-            "name": "idex"
-          }
-        ]
-      },
       "body": [
         {
-          "type": "call",
-          "name": "out",
+          "type": "literal",
+          "value": 0
+        }
+      ],
+      "identifier": "count",
+      "type": "assignment"
+    },
+    {
+      "body": [
+        {
           "arguments": [
             {
-              "type": "expression",
-              "operator": "+",
               "body": [
-                { "type": "variable", "name": "idex" },
-                { "type": "literal", "value": 10 }
-              ]
+                {
+                  "type": "literal",
+                  "value": 10
+                },
+                {
+                  "name": {
+                    "name": "count",
+                    "type": "variable"
+                  },
+                  "parent": {
+                    "name": "data",
+                    "type": "variable"
+                  },
+                  "type": "variable"
+                }
+              ],
+              "operator": "+",
+              "type": "expression"
             }
-          ]
+          ],
+          "identifier": "out",
+          "type": "call"
         },
         {
-          "type": "assignment",
-          "identifier": "idex",
-          "body": {
-            "type": "expression",
-            "operator": "+",
-            "body": [
-              { "type": "variable", "name": "idex" },
-              { "type": "literal", "value": 1 }
-            ]
-          }
+          "body": [
+            {
+              "body": [
+                {
+                  "type": "literal",
+                  "value": 1
+                },
+                {
+                  "name": "count",
+                  "type": "variable"
+                }
+              ],
+              "operator": "+",
+              "type": "expression"
+            },
+            {
+              "name": "count",
+              "type": "variable"
+            }
+          ],
+          "operator": "=",
+          "type": "expression"
         }
-      ]
+      ],
+      "condition": {
+        "body": [
+          {
+            "name": "data",
+            "type": "variable"
+          },
+          {
+            "name": "count",
+            "type": "variable"
+          }
+        ],
+        "operator": "<",
+        "type": "expression"
+      },
+      "type": "loop"
     }
-  ]
+  ],
+  "type": "program"
 }

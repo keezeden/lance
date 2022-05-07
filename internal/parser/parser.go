@@ -133,7 +133,6 @@ func (p* Parser) ParseWhile() bool {
 		return false
 	}
 	token := p.lexer.Peek()
-
 	if (token.Type == "kw" && token.Value == "while") {
 		p.lexer.Pop()
 		return true
@@ -173,7 +172,33 @@ func (p* Parser) ParseComma() bool {
 		return false
 	}
 	token := p.lexer.Peek()
-	if (token.Type == "sep" && token.Value == ",") {
+	if (token.Type == "punc" && token.Value == ",") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
+func (p* Parser) ParseDot() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "punc" && token.Value == ".") {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+// TODO: Remove `let` and solve loop iterators instead
+func (p* Parser) ParseLet() bool {
+	if (p.lexer.Eof()) {
+		return false
+	}
+	token := p.lexer.Peek()
+	if (token.Type == "kw" && token.Value == "let") {
 		p.lexer.Pop()
 		return true
 	}
@@ -207,7 +232,7 @@ func (p* Parser) ParseLiteral() Node {
 	return nil
 }
 
-func (p* Parser) BuildOperator(token lexer.Token) Node {
+func (p* Parser) BuildOperator(token lexer.Token) Node {	
 	return Node{
 		"op": token.Value,
 	}
@@ -217,6 +242,15 @@ func (p* Parser) BuildVar(token lexer.Token) Node {
 	return Node{
 		"type": "variable",
 		"name": token.Value,
+	}
+}
+
+
+func (p* Parser) BuildBracketAccessor(parentNode Node, childNode Node) Node {
+	return Node{
+		"type": "variable",
+		"name": childNode,
+		"parent": parentNode,
 	}
 }
 
@@ -264,11 +298,11 @@ func (p* Parser) BuildConditional(condition Node, ifStatement Node, elseStatemen
 	  }
 }
 
-func (p* Parser) BuildLoop(condition Node, statement Node) Node {
+func (p* Parser) BuildLoop(condition Node, statements []Node) Node {
 	return Node{
 		"type": "loop",
 		"condition": condition,
-		"body": statement,		
+		"body": statements,		
 	  }
 }
 
@@ -280,20 +314,63 @@ func (p* Parser) BuildArray(terms []Node) Node {
 }
 
 func (p* Parser) ParseTerms() Node {
-	sideNode := p.ParseVar()
+	sideNode := p.ParseAccessor()
 	if (sideNode != nil) {
 		return sideNode
-	}	
+	}
+	
 	sideNode = p.ParseLiteral()
 	if (sideNode != nil) {
 		return sideNode
 	}
+
+	sideNode = p.ParseVar()
+	if (sideNode != nil) {
+		return sideNode
+	}
+
 	sideNode = p.ParseArray()
 	if (sideNode != nil) {
 		return sideNode
 	}
 
 	return nil
+}
+
+func (p* Parser) ParseAccessor() Node {
+	node := p.ParseBracketAccessor()
+	if (node != nil) {
+		return node
+	}
+
+	return nil
+}
+
+
+func (p* Parser) ParseBracketAccessor() Node {
+	var parentNode Node
+	parentNode = p.ParseVar()
+	
+	if (parentNode == nil)	{
+		return nil
+	}
+
+	isOpenSquareBracket := p.ParseOpenSquareBracket()
+	if (!isOpenSquareBracket) {
+		return parentNode
+	}
+
+	childNode := p.ParseVar()
+	if (childNode == nil)	{
+		return nil
+	}
+
+	isClosedSquareBracket := p.ParseClosedSquareBracket()
+	if (!isClosedSquareBracket) {
+		return nil
+	}
+
+	return p.BuildBracketAccessor(parentNode, childNode)
 }
 
 func (p* Parser) ParseArrayTerms(terms []Node) []Node {
@@ -320,7 +397,6 @@ func (p* Parser) ParseArray() Node {
 
 	var termNodes []Node
 	termNodes = p.ParseArrayTerms(termNodes)
-	
 
 	isClosedSquareBracket := p.ParseClosedSquareBracket()
 	if (!isClosedSquareBracket) {
@@ -338,10 +414,10 @@ func (p* Parser) ParseCall() Node {
 	
 	isOpenParenthesis := p.ParseOpenParenthesis()
 	if (!isOpenParenthesis) {
-		return nil
+		return varNode
 	}
 
-	expressionNode := p.ParseExpression()
+	expressionNode := p.ParseExpression(nil)
 	if (expressionNode == nil) {
 		return nil
 	}
@@ -374,11 +450,14 @@ func (p* Parser) ParseAppendedTerms() (Node, Node) {
 }
 
 
-func (p* Parser) ParseExpression() Node {
-	termsNode := p.ParseTerms()
-	if (termsNode == nil) {
-		return nil
-	}
+func (p* Parser) ParseExpression(preTermNode Node) Node {
+	termsNode := preTermNode
+	if (preTermNode == nil) {
+		termsNode = p.ParseTerms()
+		if (termsNode == nil) {
+			return nil
+		}
+}
 
 	operatorNode, extraTermsNode := p.ParseAppendedTerms()
 	if (operatorNode == nil || extraTermsNode == nil) {
@@ -390,10 +469,12 @@ func (p* Parser) ParseExpression() Node {
 
 func (p* Parser) ParseAssignment() Node {
 	isConst := p.ParseConst()
-	if (!isConst) {
+	isLet := p.ParseLet()
+	
+	if (!isConst && !isLet) {
 		return nil
 	}
-
+	
 	varNode := p.ParseVar()
 	if (varNode == nil) {
 		return nil
@@ -401,7 +482,7 @@ func (p* Parser) ParseAssignment() Node {
 
 	isEquals := p.ParseEquals()	
 	if (!isEquals) {
-		return nil
+		return varNode
 	}
 
 	callNode := p.ParseCall()
@@ -409,7 +490,7 @@ func (p* Parser) ParseAssignment() Node {
 		return p.BuildAssignment(varNode, callNode)
 	}
 
-	expressionNode := p.ParseExpression()
+	expressionNode := p.ParseExpression(nil)
 	if (expressionNode != nil) {
 		return p.BuildAssignment(varNode, expressionNode)
 	}
@@ -433,7 +514,7 @@ func (p* Parser) ParseConditional() Node {
 		return nil
 	}
 
-	ifExpressionNode := p.ParseExpression()
+	ifExpressionNode := p.ParseExpression(nil)
 	if (ifExpressionNode == nil) {
 		return nil
 	}
@@ -492,7 +573,7 @@ func (p* Parser) ParseLoop() Node {
 		return nil
 	}
 
-	expressionNode := p.ParseExpression()
+	expressionNode := p.ParseExpression(nil)
 	if (expressionNode == nil) {
 		return nil
 	}
@@ -501,23 +582,24 @@ func (p* Parser) ParseLoop() Node {
 	if (!isClosedParenthesis) {
 		return nil
 	}
-
+	
 	isOpenBracket := p.ParseOpenBracket()
 	if (!isOpenBracket) {
 		return nil
 	}
-
-	statementNode := p.ParseStatement()
-	if (statementNode == nil) {
-		return nil
-	}
 	
-	isClosedBracket := p.ParseClosedBracket()
-	if (!isClosedBracket) {
-		return nil
+	var statementNodes []Node
+
+	for (!p.ParseClosedBracket()) {
+		statementNode := p.ParseStatement()	
+		if (statementNode != nil) {
+			statementNodes = append(statementNodes, statementNode)
+		}
 	}
 
-	return p.BuildLoop(expressionNode, statementNode)
+
+
+	return p.BuildLoop(expressionNode, statementNodes)
 }
 
 func (p* Parser) ParseStatement() Node {
@@ -537,23 +619,20 @@ func (p* Parser) ParseStatement() Node {
 	}
 
 	callNode := p.ParseCall()
-	if (callNode != nil) {
-		return callNode
-	}
 
-	expressionNode := p.ParseExpression()
+	expressionNode := p.ParseExpression(callNode)
 	if (expressionNode != nil) {
 		return expressionNode
 	}
 
-	return nil
+	return callNode
 }
 
 func (p* Parser) Parse() Node {	
 	var treeNodes []Node
 	for (!p.lexer.Eof()) {
 		statementNode := p.ParseStatement()
-		if (statementNode != nil) {
+		if (statementNode != nil) {			
 			treeNodes = append(treeNodes, statementNode)
 		}
 	}

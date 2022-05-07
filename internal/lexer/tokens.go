@@ -232,7 +232,23 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "idex",
+		Value: "iterations",
+	},
+	{
+		Type:  "op",
+		Value: "=",
+	},
+	{
+		Type:  "num",
+		Value: 3,
+	},
+	{
+		Type:  "kw",
+		Value: "let",
+	},
+	{
+		Type:  "var",
+		Value: "count",
 	},
 	{
 		Type:  "op",
@@ -252,7 +268,7 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "idex",
+		Value: "count",
 	},
 	{
 		Type:  "op",
@@ -260,15 +276,7 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "data",
-	},
-	{
-		Type:  "punc",
-		Value: ".",
-	},
-	{
-		Type:  "var",
-		Value: "length",
+		Value: "iterations",
 	},
 	{
 		Type:  "punc",
@@ -296,7 +304,7 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "idex",
+		Value: "count",
 	},
 	{
 		Type:  "punc",
@@ -316,7 +324,7 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "idex",
+		Value: "count",
 	},
 	{
 		Type:  "op",
@@ -324,7 +332,7 @@ var LoopTokens = []Token{
 	},
 	{
 		Type:  "var",
-		Value: "idex",
+		Value: "count",
 	},
 	{
 		Type:  "op",
