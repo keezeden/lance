@@ -67,7 +67,7 @@ func TestLexer(t *testing.T) {
 		
 				lexerer.Pop()
 			}
-		
+
 			assert.Equal(testCase.ExpectedOutput, tokens, testCase.Description)
 		})
 	}

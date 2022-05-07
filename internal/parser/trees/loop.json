@@ -100,7 +100,7 @@
       "condition": {
         "body": [
           {
-            "name": "data",
+            "name": "iterations",
             "type": "variable"
           },
           {
