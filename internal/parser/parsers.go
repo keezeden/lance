@@ -65,6 +65,19 @@ func (p *Parser) ParseEquals() bool {
 	return false
 }
 
+func (p *Parser) ParseGreaterThan() bool {
+	if p.lexer.Eof() {
+		return false
+	}
+	token := p.lexer.Peek()
+	if token.Type == "op" && token.Value == ">" {
+		p.lexer.Pop()
+		return true
+	}
+
+	return false
+}
+
 func (p *Parser) ParseOpenBracket() bool {
 	if p.lexer.Eof() {
 		return false
@@ -161,19 +174,6 @@ func (p *Parser) ParseComma() bool {
 	}
 	token := p.lexer.Peek()
 	if token.Type == "punc" && token.Value == "," {
-		p.lexer.Pop()
-		return true
-	}
-
-	return false
-}
-
-func (p *Parser) ParseDot() bool {
-	if p.lexer.Eof() {
-		return false
-	}
-	token := p.lexer.Peek()
-	if token.Type == "punc" && token.Value == "." {
 		p.lexer.Pop()
 		return true
 	}

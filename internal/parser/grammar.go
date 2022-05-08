@@ -21,6 +21,11 @@ func (p *Parser) ParseTerms() Node {
 		return sideNode
 	}
 
+	sideNode = p.ParseFunction()
+	if sideNode != nil {
+		return sideNode
+	}
+
 	return nil
 }
 
@@ -305,4 +310,44 @@ func (p *Parser) ParseStatement() Node {
 	}
 
 	return callNode
+}
+
+func (p *Parser) ParseFunction() Node {
+	isOpenParenthesis := p.ParseOpenParenthesis()
+	if !isOpenParenthesis {
+		return nil
+	}
+
+	var argumentNodes []Node
+	argumentNodes = p.ParseArrayTerms(argumentNodes)
+
+	isClosedParenthesis := p.ParseClosedParenthesis()
+	if !isClosedParenthesis {
+		return nil
+	}
+
+	isEquals := p.ParseEquals()
+	if !isEquals {
+		return nil
+	}
+
+	isGreaterThan := p.ParseGreaterThan()
+	if !isGreaterThan {
+		return nil
+	}
+
+	isOpenBracket := p.ParseOpenBracket()
+	if !isOpenBracket {
+		return nil
+	}
+
+	var statementNodes []Node
+	for !p.ParseClosedBracket() {
+		statementNode := p.ParseStatement()
+		if statementNode != nil {
+			statementNodes = append(statementNodes, statementNode)
+		}
+	}
+
+	return p.BuildFunction(argumentNodes, statementNodes)
 }

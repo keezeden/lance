@@ -80,3 +80,11 @@ func (p *Parser) BuildArray(terms []Node) Node {
 		"value": terms,
 	}
 }
+
+func (p *Parser) BuildFunction(arguments []Node, statements []Node) Node {
+	return Node{
+		"type":  "function",
+		"arguments": arguments,
+		"body": statements,
+	}
+}
