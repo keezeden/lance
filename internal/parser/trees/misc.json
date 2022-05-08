@@ -1,0 +1,7 @@
+{
+  "body": [
+    { "body": [{ "type": "literal", "value": "variable name" }], "identifier": "swamp", "type": "assignment" },
+    { "body": [{ "type": "literal", "value": "substring variable name" }], "identifier": "amp", "type": "assignment" }
+  ],
+  "type": "program"
+}

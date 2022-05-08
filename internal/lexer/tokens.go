@@ -415,7 +415,7 @@ var ConditionalTokens = []Token{
 	},
 	{
 		Type:  "str",
-		Value: "A man who enjoys culture I see",
+		Value: "A man of culture I see",
 	},
 	{
 		Type:  "punc",
@@ -475,5 +475,40 @@ var MathTokens = []Token{
 	{
 		Type:  "num",
 		Value: 3,
+	},
+}
+
+var MiscTokens = []Token{
+	{
+		Type:  "kw",
+		Value: "const",
+	},
+	{
+		Type:  "var",
+		Value: "swamp",
+	},
+	{
+		Type:  "op",
+		Value: "=",
+	},
+	{
+		Type:  "str",
+		Value: "variable name",
+	},
+	{
+		Type:  "kw",
+		Value: "const",
+	},
+	{
+		Type:  "var",
+		Value: "amp",
+	},
+	{
+		Type:  "op",
+		Value: "=",
+	},
+	{
+		Type:  "str",
+		Value: "substring variable name",
 	},
 }

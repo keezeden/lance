@@ -86,3 +86,18 @@ func TestLoopInput(t *testing.T) {
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'loop' correctly")
 }
 
+func TestMiscInput(t *testing.T) {
+	assert := assert.New(t)
+	file := "../../snippets/misc.ll"
+
+	lexerer := lexer.BuildLexer(file)
+	parser := BuildParser(lexerer)
+
+	ast := parser.Parse()
+
+	actualBytes, _ := json.Marshal(ast)
+	expectedBytes, _ := os.ReadFile("./trees/misc.json")
+
+	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'loop' correctly")
+}
+

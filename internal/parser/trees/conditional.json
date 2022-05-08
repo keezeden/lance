@@ -3,9 +3,7 @@
     {
       "body": [
         {
-          "arguments": [
-            { "type": "literal", "value": "Whats your favourite animal?" }
-          ],
+          "arguments": [{ "type": "literal", "value": "Whats your favourite animal?" }],
           "identifier": "in",
           "type": "call"
         }
@@ -28,9 +26,7 @@
         "type": "call"
       },
       "if": {
-        "arguments": [
-          { "type": "literal", "value": "A man who enjoys culture I see" }
-        ],
+        "arguments": [{ "type": "literal", "value": "A man of culture I see" }],
         "identifier": "out",
         "type": "call"
       },

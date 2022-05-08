@@ -10,7 +10,7 @@ import (
 )
 
 var separators = regexp.MustCompile("[(){}\\[\\]\\,\\.]")
-var keywords = regexp.MustCompile("const|let|if|else|out|in|while")
+var keywords = regexp.MustCompile("\\b(const|let|if|else|out|in|while)\\b")
 var operators = regexp.MustCompile("(=){1,2}|\\!=|\\+|\\-|\\/|\\*|\\>|\\<")
 var strs = regexp.MustCompile("\"(.*?)\"")
 var ints = regexp.MustCompile("\\d+")
@@ -22,7 +22,9 @@ func replace_separators(source string) string {
 	return separators.ReplaceAllString(source, "@$0@")
 } 
 func replace_keywords(source string) string {
-	return keywords.ReplaceAllString(source, "@$0@")
+	strings_cleaned, string_literals := RemoveStrings(source)
+	updated := keywords.ReplaceAllString(strings_cleaned, "@$0@")
+	return AddStrings(updated, string_literals)
 } 
 func replace_operators(source string) string {
 	return operators.ReplaceAllString(source, "@$0@")
@@ -34,24 +36,35 @@ func replace_ints(source string) string {
 	return ints.ReplaceAllString(source, "@$0@")
 } 
 func replace_indentifiers(source string) string {
+	strings_cleaned, string_literals := RemoveStrings(source)
+
+	blank := strop.ReplaceAllString(strings_cleaned, "     ")	
+
+	var clean = utils.RemoveDuplicateStrings(indentifiers.FindAllString(blank, -1))
+	
+	for _, id := range(clean) {
+		re := regexp.MustCompile("\\b" + id + "\\b")
+		strings_cleaned = re.ReplaceAllString(strings_cleaned, "@" + id + "@")
+	}
+	
+	return AddStrings(strings_cleaned, string_literals)
+} 
+
+func RemoveStrings(source string) (string, [][]string) {
 	string_literals := strs.FindAllStringSubmatch(source, -1)
 	strings_cleaned := strs.ReplaceAllString(source, "$")
+	return strings_cleaned, string_literals
+}
 
-	blank := strop.ReplaceAllString(strings_cleaned, "     ")
+func AddStrings(source string, literals [][]string) string {
 	var buffer string = source
-	
-	var clean = utils.RemoveDuplicateStrings(indentifiers.FindAllString(blank, -1))
-	for _, id := range(clean) {
-		strings_cleaned = strings.ReplaceAll(strings_cleaned, id, "@" + id + "@")
-		buffer = strings_cleaned
-	}
 
 	var final string
 	var counter = 0
 
 	for _, char := range(buffer) {
 		if (string(char) == "$") {
-			final = final + string_literals[counter][0]
+			final = final + literals[counter][0]
 			counter++
 		} else {
 			final = final + string(char)
@@ -59,8 +72,7 @@ func replace_indentifiers(source string) string {
 	}
 	
 	return final
-} 
-
+}
 
 
 type Lexer struct {
@@ -135,6 +147,7 @@ func BuildLexer(file string) Lexer {
 	}
 
 	var stropped  = string(lines)
+
 	var patterns = []func(string) string{
 		replace_separators,
 		replace_keywords,
@@ -147,6 +160,8 @@ func BuildLexer(file string) Lexer {
 	for _, pattern := range(patterns) {
 		stropped = pattern(stropped)
 	}
+	
+
 	
 
 	for _, word := range(strop.FindAllString(stropped, -1)) {

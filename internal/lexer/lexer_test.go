@@ -50,6 +50,12 @@ var tests = []TestCase{
 		Input: "../../snippets/math.ll",
 		ExpectedOutput: MathTokens, 
 	},
+	{
+		Name: "Misc Snippet",
+		Description: "Lexer tokenizes 'misc' correctly",
+		Input: "../../snippets/misc.ll",
+		ExpectedOutput: MiscTokens, 
+	},
 }
 
 
