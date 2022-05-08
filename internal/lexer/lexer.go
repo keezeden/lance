@@ -19,7 +19,9 @@ var indentifiers = regexp.MustCompile("[a-zA-Z]+")
 var strop = regexp.MustCompile("@(.*?)@")
 
 func replace_separators(source string) string {
-	return separators.ReplaceAllString(source, "@$0@")
+	strings_cleaned, string_literals := RemoveStrings(source)
+	updated := separators.ReplaceAllString(strings_cleaned, "@$0@")
+	return AddStrings(updated, string_literals)
 } 
 func replace_keywords(source string) string {
 	strings_cleaned, string_literals := RemoveStrings(source)
@@ -27,7 +29,9 @@ func replace_keywords(source string) string {
 	return AddStrings(updated, string_literals)
 } 
 func replace_operators(source string) string {
-	return operators.ReplaceAllString(source, "@$0@")
+	strings_cleaned, string_literals := RemoveStrings(source)
+	updated := operators.ReplaceAllString(strings_cleaned, "@$0@")
+	return AddStrings(updated, string_literals)
 } 
 func replace_strings(source string) string {
 	return strs.ReplaceAllString(source, "@$0@")
@@ -88,6 +92,10 @@ type Token struct {
 
 // TODO: optimize with FSM for scanning possible next token first
 func evaluate(segment string) (Token, bool) {
+	// strings
+	if (utils.Matches(segment, *strs)) {
+		return Token{ Value: strings.Replace(segment, "\"", "", -1), Type: "str"}, true
+	}
 	// keywords
 	if (utils.Matches(segment, *keywords)) {
 		return Token{ Value: segment, Type: "kw"}, true
@@ -99,10 +107,6 @@ func evaluate(segment string) (Token, bool) {
 	// operators
 	if (utils.Matches(segment, *operators)) {
 		return Token{ Value: segment, Type: "op"}, true
-	}
-	// strings
-	if (utils.Matches(segment, *strs)) {
-		return Token{ Value: strings.Replace(segment, "\"", "", -1), Type: "str"}, true
 	}
 	//ints
 	if (utils.Matches(segment, *ints)) {

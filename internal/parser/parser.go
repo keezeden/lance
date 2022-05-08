@@ -289,7 +289,7 @@ func (p* Parser) BuildCall(identifier Node, terms Node) Node {
 	  }
 }
 
-func (p* Parser) BuildConditional(condition Node, ifStatement Node, elseStatement Node) Node {
+func (p* Parser) BuildConditional(condition Node, ifStatement []Node, elseStatement []Node) Node {
 	return Node{
 		"type": "conditional",
 		"condition": condition,
@@ -422,6 +422,7 @@ func (p* Parser) ParseCall() Node {
 		return nil
 	}
 
+
 	isClosedParenthesis := p.ParseClosedParenthesis()
 	if (!isClosedParenthesis) {
 		return nil
@@ -450,14 +451,15 @@ func (p* Parser) ParseAppendedTerms() (Node, Node) {
 }
 
 
-func (p* Parser) ParseExpression(preTermNode Node) Node {
+func (p* Parser) ParseExpression(preTermNode Node) Node {	
 	termsNode := preTermNode
 	if (preTermNode == nil) {
 		termsNode = p.ParseTerms()
 		if (termsNode == nil) {
 			return nil
 		}
-}
+	}
+
 
 	operatorNode, extraTermsNode := p.ParseAppendedTerms()
 	if (operatorNode == nil || extraTermsNode == nil) {
@@ -478,7 +480,7 @@ func (p* Parser) ParseAssignment() Node {
 	varNode := p.ParseVar()
 	if (varNode == nil) {
 		return nil
-	}
+	}	
 
 	isEquals := p.ParseEquals()	
 	if (!isEquals) {
@@ -529,14 +531,12 @@ func (p* Parser) ParseConditional() Node {
 		return nil
 	}
 
-	ifStatementNode := p.ParseStatement()
-	if (ifStatementNode == nil) {
-		return nil
-	}
-	
-	isClosedBracket := p.ParseClosedBracket()
-	if (!isClosedBracket) {
-		return nil
+	var ifStatementNodes []Node
+	for (!p.ParseClosedBracket()) {
+		statementNode := p.ParseStatement()	
+		if (statementNode != nil) {
+			ifStatementNodes = append(ifStatementNodes, statementNode)			
+		}
 	}
 
 	isElse := p.ParseElse()
@@ -549,17 +549,15 @@ func (p* Parser) ParseConditional() Node {
 		return nil
 	}
 
-	elseStatementNode := p.ParseStatement()
-	if (elseStatementNode == nil) {
-		return nil
+	var elseStatementNodes []Node
+	for (!p.ParseClosedBracket()) {
+		statementNode := p.ParseStatement()	
+		if (statementNode != nil) {
+			elseStatementNodes = append(elseStatementNodes, statementNode)
+		}
 	}
 	
-	isElseClosedBracket := p.ParseClosedBracket()
-	if (!isElseClosedBracket) {
-		return nil
-	}
-
-	return p.BuildConditional(ifExpressionNode, ifStatementNode, elseStatementNode)
+	return p.BuildConditional(ifExpressionNode, ifStatementNodes, elseStatementNodes)
 }
 
 func (p* Parser) ParseLoop() Node {
@@ -607,7 +605,7 @@ func (p* Parser) ParseStatement() Node {
 	if (assignmentNode != nil) {
 		return assignmentNode
 	}
-
+	
 	conditionalNode := p.ParseConditional()
 	if (conditionalNode != nil) {
 		return conditionalNode

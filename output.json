@@ -1,0 +1,26 @@
+{
+  "body": [
+    { "body": [{ "type": "literal", "value": "hello world" }], "identifier": "message", "type": "assignment" },
+    { "arguments": [{ "name": "message", "type": "variable" }], "identifier": "out", "type": "call" },
+    { "body": [{ "type": "literal", "value": 21 }], "identifier": "age", "type": "assignment" },
+    {
+      "body": [{ "arguments": [{ "type": "literal", "value": "Name: " }], "identifier": "in", "type": "call" }],
+      "identifier": "name",
+      "type": "assignment"
+    },
+    {
+      "condition": {
+        "body": [
+          { "type": "literal", "value": "lance" },
+          { "name": "name", "type": "variable" }
+        ],
+        "operator": "==",
+        "type": "expression"
+      },
+      "else": [{ "arguments": [{ "name": "name", "type": "variable" }], "identifier": "out", "type": "call" }],
+      "if": [{ "arguments": [{ "type": "literal", "value": "Thats me, not you" }], "identifier": "out", "type": "call" }],
+      "type": "conditional"
+    }
+  ],
+  "type": "program"
+}
