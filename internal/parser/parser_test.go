@@ -2,7 +2,6 @@ package parser
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"testing"
 
@@ -67,8 +66,6 @@ func TestConditionalInput(t *testing.T) {
 	ast := parser.Parse()
 
 	actualBytes, _ := json.Marshal(ast)
-	fmt.Println(string(actualBytes))
-
 	expectedBytes, _ := os.ReadFile("./trees/conditional.json")
 
 	assert.JSONEqf(string(actualBytes), string(expectedBytes), "Parser parses 'input' correctly")
