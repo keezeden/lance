@@ -16,4 +16,15 @@ if (name == "lance") {
     greet(name)
 }
 
+const data = [1,2,3,4,5]
+const iterations = 5
+let count = 0
+
+while (count < iterations) {
+    out("We are at item: " + data[count])
+}
+
+
+
+
 

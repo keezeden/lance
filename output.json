@@ -4,6 +4,32 @@
     { "arguments": [{ "name": "message", "type": "variable" }], "identifier": "out", "type": "call" },
     { "body": [{ "type": "literal", "value": 21 }], "identifier": "age", "type": "assignment" },
     {
+      "body": [
+        {
+          "arguments": [{ "name": "name", "type": "variable" }],
+          "body": [
+            {
+              "arguments": [
+                {
+                  "body": [
+                    { "name": "name", "type": "variable" },
+                    { "type": "literal", "value": "Hello " }
+                  ],
+                  "operator": "+",
+                  "type": "expression"
+                }
+              ],
+              "identifier": "log",
+              "type": "call"
+            }
+          ],
+          "type": "function"
+        }
+      ],
+      "identifier": "greet",
+      "type": "assignment"
+    },
+    {
       "body": [{ "arguments": [{ "type": "literal", "value": "Name: " }], "identifier": "in", "type": "call" }],
       "identifier": "name",
       "type": "assignment"
@@ -17,9 +43,54 @@
         "operator": "==",
         "type": "expression"
       },
-      "else": [{ "arguments": [{ "name": "name", "type": "variable" }], "identifier": "out", "type": "call" }],
+      "else": [{ "arguments": [{ "name": "name", "type": "variable" }], "identifier": "greet", "type": "call" }],
       "if": [{ "arguments": [{ "type": "literal", "value": "Thats me, not you" }], "identifier": "out", "type": "call" }],
       "type": "conditional"
+    },
+    {
+      "body": [
+        {
+          "type": "array",
+          "value": [
+            { "type": "literal", "value": 1 },
+            { "type": "literal", "value": 2 },
+            { "type": "literal", "value": 3 },
+            { "type": "literal", "value": 4 },
+            { "type": "literal", "value": 5 }
+          ]
+        }
+      ],
+      "identifier": "data",
+      "type": "assignment"
+    },
+    { "body": [{ "type": "literal", "value": 5 }], "identifier": "iterations", "type": "assignment" },
+    { "body": [{ "type": "literal", "value": 0 }], "identifier": "count", "type": "assignment" },
+    {
+      "body": [
+        {
+          "arguments": [
+            {
+              "body": [
+                { "name": { "name": "count", "type": "variable" }, "parent": { "name": "data", "type": "variable" }, "type": "variable" },
+                { "type": "literal", "value": "We are at item: " }
+              ],
+              "operator": "+",
+              "type": "expression"
+            }
+          ],
+          "identifier": "out",
+          "type": "call"
+        }
+      ],
+      "condition": {
+        "body": [
+          { "name": "iterations", "type": "variable" },
+          { "name": "count", "type": "variable" }
+        ],
+        "operator": "\u003c",
+        "type": "expression"
+      },
+      "type": "loop"
     }
   ],
   "type": "program"
